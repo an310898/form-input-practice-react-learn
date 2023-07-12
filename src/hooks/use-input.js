@@ -20,14 +20,13 @@ const useInput = (type = "text", inputName) => {
     setInput(value);
   };
 
-  const onSetInputTouched = () => {
-    setInputTouched(true);
+  const onSetInputTouched = (value = true) => {
+    setInputTouched(value);
   };
 
   return {
     inputName: inputName,
     value: input,
-    touched: inputTouched,
     inputValid: inputIsValid,
     valid: valid,
     error: error,

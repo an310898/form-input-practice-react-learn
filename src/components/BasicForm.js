@@ -22,8 +22,27 @@ const BasicForm = props => {
     input.setTouched();
   };
 
+  const clearInput = () => {
+    firstNameInput.setInput("");
+    lastNameInput.setInput("");
+    emaiInput.setInput("");
+
+    firstNameInput.setTouched(false);
+    lastNameInput.setTouched(false);
+    emaiInput.setTouched(false);
+  };
+
   const formSubmitHandler = e => {
     e.preventDefault();
+    alert(
+      JSON.stringify({
+        firstName: firstNameInput.value,
+        lastName: lastNameInput.value,
+        email: emaiInput.value,
+      })
+    );
+
+    clearInput();
   };
 
   return (

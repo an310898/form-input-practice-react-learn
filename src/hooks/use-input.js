@@ -1,35 +1,31 @@
 import { useState } from "react";
 
-const useInput = (type = "text", inputName) => {
+const useInput = validateValue => {
   const [input, setInput] = useState("");
   const [inputTouched, setInputTouched] = useState(false);
 
-  let inputIsValid = input.trim().length > 0;
-  let error;
-  if (type === "email") {
-    inputIsValid = input.includes("@");
-    error = "Email must contain @";
-  } else if (type === "text") {
-    inputIsValid = input.trim().length > 0;
-    error = `${inputName} must not be empty`;
-  }
+  let inputIsValid = validateValue(input);
 
   const valid = !inputIsValid && inputTouched;
 
-  const onSetInput = value => {
-    setInput(value);
+  const onSetInput = event => {
+    setInput(event.target.value);
   };
 
-  const onSetInputTouched = (value = true) => {
-    setInputTouched(value);
+  const onSetInputTouched = () => {
+    setInputTouched(true);
+  };
+
+  const reset = () => {
+    setInput("");
+    setInputTouched(false);
   };
 
   return {
-    inputName: inputName,
     value: input,
     inputValid: inputIsValid,
     valid: valid,
-    error: error,
+    reset: reset,
     setInput: onSetInput,
     setTouched: onSetInputTouched,
   };

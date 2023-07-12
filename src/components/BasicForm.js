@@ -1,9 +1,9 @@
 import useInput from "../hooks/use-input";
 
 const BasicForm = props => {
-  const firstNameInput = useInput("text", "First Name");
-  const lastNameInput = useInput("text", "Last Name");
-  const emaiInput = useInput("email", "E-Mail");
+  const firstNameInput = useInput(value => value.trim().length > 0);
+  const lastNameInput = useInput(value => value.trim().length > 0);
+  const emaiInput = useInput(value => value.includes("@"));
 
   let formValid = false;
 
@@ -15,21 +15,10 @@ const BasicForm = props => {
     formValid = true;
   }
 
-  const inputChangeHandler = (input, e) => {
-    input.setInput(e.target.value);
-  };
-  const inputBlurHandler = input => {
-    input.setTouched();
-  };
-
   const clearInput = () => {
-    firstNameInput.setInput("");
-    lastNameInput.setInput("");
-    emaiInput.setInput("");
-
-    firstNameInput.setTouched(false);
-    lastNameInput.setTouched(false);
-    emaiInput.setTouched(false);
+    firstNameInput.reset();
+    lastNameInput.reset();
+    emaiInput.reset();
   };
 
   const formSubmitHandler = e => {
@@ -57,11 +46,11 @@ const BasicForm = props => {
             type="text"
             id="name"
             value={firstNameInput.value}
-            onChange={inputChangeHandler.bind(null, firstNameInput)}
-            onBlur={inputBlurHandler.bind(null, firstNameInput)}
+            onChange={firstNameInput.setInput}
+            onBlur={firstNameInput.setTouched}
           />
           {firstNameInput.valid && (
-            <p className="error-text">{firstNameInput.error}</p>
+            <p className="error-text">First name must not be empty</p>
           )}
         </div>
         <div
@@ -73,11 +62,11 @@ const BasicForm = props => {
             type="text"
             id="name"
             value={lastNameInput.value}
-            onChange={inputChangeHandler.bind(null, lastNameInput)}
-            onBlur={inputBlurHandler.bind(null, lastNameInput)}
+            onChange={lastNameInput.setInput}
+            onBlur={lastNameInput.setTouched}
           />
           {lastNameInput.valid && (
-            <p className="error-text">{lastNameInput.error} </p>
+            <p className="error-text">Last name must not be empty</p>
           )}
         </div>
       </div>
@@ -88,11 +77,11 @@ const BasicForm = props => {
           type="text"
           id="name"
           value={emaiInput.value}
-          onChange={inputChangeHandler.bind(null, emaiInput)}
-          onBlur={inputBlurHandler.bind(null, emaiInput)}
+          onChange={emaiInput.setInput}
+          onBlur={emaiInput.setTouched}
         />
       </div>
-      {emaiInput.valid && <p className="error-text">{emaiInput.error}</p>}
+      {emaiInput.valid && <p className="error-text">E-Mail must contain @</p>}
 
       <div className="form-actions">
         <button disabled={!formValid}>Submit</button>

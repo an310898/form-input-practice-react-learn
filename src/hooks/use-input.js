@@ -1,34 +1,52 @@
-import { useState } from "react";
+import { useReducer } from "react";
 
-const useInput = validateValue => {
-  const [input, setInput] = useState("");
-  const [inputTouched, setInputTouched] = useState(false);
+const initialInputState = { input: "", inputTouched: false };
 
-  let inputIsValid = validateValue(input);
+const inputReducer = (state, action) => {
+	if (action.type === "INPUT") {
+		return {
+			input: action.value,
+			inputTouched: state.inputTouched,
+		};
+	} else if (action.type === "TOUCHED") {
+		return {
+			input: state.input,
+			inputTouched: true,
+		};
+	} else if (action.type === "RESET") {
+		return initialInputState;
+	}
 
-  const valid = !inputIsValid && inputTouched;
+	return initialInputState;
+};
 
-  const onSetInput = event => {
-    setInput(event.target.value);
-  };
+const useInput = (validateValue) => {
+	const [inputState, dispatch] = useReducer(inputReducer, initialInputState);
 
-  const onSetInputTouched = () => {
-    setInputTouched(true);
-  };
+	let inputIsValid = validateValue(inputState.input);
 
-  const reset = () => {
-    setInput("");
-    setInputTouched(false);
-  };
+	const valid = !inputIsValid && inputState.inputTouched;
 
-  return {
-    value: input,
-    inputValid: inputIsValid,
-    valid: valid,
-    reset: reset,
-    setInput: onSetInput,
-    setTouched: onSetInputTouched,
-  };
+	const onSetInput = (event) => {
+		dispatch({ type: "INPUT", value: event.target.value });
+	};
+
+	const onSetInputTouched = () => {
+		dispatch({ type: "TOUCHED" });
+	};
+
+	const reset = () => {
+		dispatch({ type: "RESET" });
+	};
+
+	return {
+		value: inputState.input,
+		inputValid: inputIsValid,
+		valid: valid,
+		reset: reset,
+		setInput: onSetInput,
+		setTouched: onSetInputTouched,
+	};
 };
 
 export default useInput;
